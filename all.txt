@@ -1,5 +1,4 @@
 cleaner
-dnd
 info
 lydia
 tag
