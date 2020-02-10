@@ -121,7 +121,8 @@ class CleanerMod(loader.Module):
         msgs = []
         if arg and arg == "one":
             message_replied = message.get_reply_message()
-            msgs.insert(message, message_replied)
+            msgs.append(message)
+            msgs.append(message_replied)
         else:
             msgs = message.client.iter_messages(entity=message.to_id,
                                                 min_id=message.reply_to_msg_id - 1,
