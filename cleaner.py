@@ -104,14 +104,14 @@ class CleanerMod(loader.Module):
             await utils.answer(message, self.strings["unknow"])
 
     async def del_no_reply_arg(self, message, arg):
-        user_id =  None
+        user_id = None
         if arg == "me":
             user_id = self._me.user_id
         msgs = message.client.iter_messages(entity=message.to_id,
                                             from_user=user_id,
                                             reverse=True)
         return msgs
-    
+
     async def del_no_reply_number(self, message, number):
         msgs = message.client.iter_messages(entity=message.to_id,
                                             limit=number)
