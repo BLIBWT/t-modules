@@ -35,7 +35,7 @@ class TagMod(loader.Module):
     -> Tag all admins (fast way to report).
     -> Tag all bots (why not ?).
     -> Tag all members (why not ?).
-    
+
     Commands :
      
     """
@@ -45,7 +45,9 @@ class TagMod(loader.Module):
                "no_admin": "\n<b>No admin here !</b>",
                "no_bot": "\n<b>No bot here !</b>",
                "no_member": "\n<b>No member here !</b>",
-               "user_link": "\n• <a href='tg://user?id={}'>{}</a>"}
+               "user_link": "\n• <a href='tg://user?id={id}'>{name}</a>",
+               "user_list_link": ", <a href='tg://user?id={id}'>{name}</a>",
+               "user_list_link_first": "<a href='tg://user?id={id}'>{name}</a>"}
 
     def config_complete(self):
         self.name = self.strings["name"]
@@ -67,11 +69,45 @@ class TagMod(loader.Module):
             users = message.client.iter_participants(message.to_id, filter=ChannelParticipantsAdmins)
             if users:
                 async for user in users:
-                    if not user.bot:
+                    if not user.bot and not user.deleted:
                         user_name = user.first_name
                         if user.last_name is not None:
                             user_name += " " + user.last_name
-                        rep += self.strings["user_link"].format(user.id, user_name)
+                        rep += self.strings["user_link"].format(id=user.id, name=utils.escape_html(ascii(user_name)))
+                        count += 1
+            if count == 0:
+                rep += self.strings["no_admin"]
+            await utils.answer(message, rep)
+        else:
+            await utils.answer(message, self.strings["unknow"])
+
+    async def adminlistcmd(self, message):
+        """
+        .adminlist : Tag all admins (excepted bots).
+        .adminlist [message] : Tag all admins (excepted bots) with message before tags.
+         
+        """
+        if isinstance(message.to_id, PeerUser):
+            await utils.answer(message, self.strings["error_chat"])
+            return
+        count = 0
+        rep = ""
+        if utils.get_args_raw(message):
+            rep = utils.get_args_raw(message)
+        if isinstance(message.to_id, PeerChat) or isinstance(message.to_id, PeerChannel):
+            users = message.client.iter_participants(message.to_id, filter=ChannelParticipantsAdmins)
+            if users:
+                first = True
+                async for user in users:
+                    if not user.bot and not user.deleted:
+                        user_name = user.first_name
+                        if user.last_name is not None:
+                            user_name += " " + user.last_name
+                        if first is True:
+                            first = False
+                            rep += self.strings["user_list_link_first"].format(id=user.id, name=utils.escape_html(ascii(user_name)))
+                        else:
+                            rep += self.strings["user_list_link"].format(id=user.id, name=utils.escape_html(ascii(user_name)))
                         count += 1
             if count == 0:
                 rep += self.strings["no_admin"]
@@ -98,7 +134,7 @@ class TagMod(loader.Module):
                     user_name = user.first_name
                     if user.last_name is not None:
                         user_name += " " + user.last_name
-                    rep += self.strings["user_link"].format(user.id, user_name)
+                    rep += self.strings["user_link"].format(id=user.id, name=utils.escape_html(ascii(user_name)))
             else:
                 rep += self.strings["no_member"]
             await utils.answer(message, rep)
@@ -126,7 +162,7 @@ class TagMod(loader.Module):
                         user_name = user.first_name
                         if user.last_name is not None:
                             user_name += " " + user.last_name
-                        rep += self.strings["user_link"].format(user.id, user_name)
+                        rep += self.strings["user_link"].format(id=user.id, name=utils.escape_html(ascii(user_name)))
                         count += 1
             if count == 0:
                 rep += self.strings["no_bot"]
