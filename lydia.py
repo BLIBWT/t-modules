@@ -58,7 +58,7 @@ class LydiaMod(loader.Module):
                "user_error": "<b>Can't find this user.</b>"}
 
     def __init__(self):
-        self.config = loader.ModuleConfig("CLIENT_KEY", "",  self.strings["client_key_cfg_doc"],
+        self.config = loader.ModuleConfig("CLIENT_KEY", "", self.strings["client_key_cfg_doc"],
                                           "IGNORE_NO_COMMON", False, self.strings["ignore_no_common_cfg_doc"])
         self.name = self.strings["name"]
         self._ratelimit = []
@@ -119,7 +119,7 @@ class LydiaMod(loader.Module):
         await utils.answer(message, self.strings["lydia_enabled"])
 
     async def forcelydiacmd(self, message):
-        """Enable Lydia for user in specific chat.\n """
+        """Enable Lydia for user in specific chat."""
         if message.is_reply:
             user = (await message.get_reply_message()).from_id
         else:
@@ -131,7 +131,7 @@ class LydiaMod(loader.Module):
         await utils.answer(message, self.strings["lydia_enabled_force"])
 
     async def dislydiacmd(self, message):
-        """Disable Lydia for the target user."""
+        """Disable Lydia for the target user.\n """
         if message.is_reply:
             user = (await message.get_reply_message()).from_id
         else:

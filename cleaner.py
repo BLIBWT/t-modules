@@ -19,7 +19,6 @@ from .. import loader, utils
 
 import logging
 
-from telethon import functions, types
 logger = logging.getLogger(__name__)
 
 
@@ -37,9 +36,9 @@ class CleanerMod(loader.Module):
      
     """
     strings = {"name": "Cleaner",
-               "del_arg" : "Argument must be 'all', 'me', 'one' or a number between 1 and 1000 !",
-               "del_arg_number" : "Number must be between 1 and 1000 !",
-               "what": "<i>What I will delete here ?</i>"}
+               "del_arg": "Argument must be 'all', 'me', 'one' or a number between 1 and 1000 !",
+               "del_arg_number": "Number must be between 1 and 1000 !",
+               "del_what": "<i>What I will delete here ?</i>"}
 
     def __init__(self):
         self._me = None
@@ -64,40 +63,19 @@ class CleanerMod(loader.Module):
         """
         del_arg = utils.get_args_raw(message)
         del_msgs = []
+        msgs = []
         # Args
         if del_arg and not message.is_reply:
-            # All
-            if del_arg == "all":
-                msgs = message.client.iter_messages(entity=message.to_id,
-                                                    reverse=True)
-                async for msg in msgs:
-                    del_msgs.append(msg.id)
-                    if len(del_msgs) >= 99:
-                        await message.client.delete_messages(message.to_id, msgs)
-                        del_msgs.clear()
-            # Me
-            elif del_arg == "me":
-                msgs = message.client.iter_messages(entity=message.to_id,
-                                                    from_user=self._me.user_id,
-                                                    reverse=True)
-                async for msg in msgs:
-                    del_msgs.append(msg.id)
-                    if len(del_msgs) >= 99:
-                        await message.client.delete_messages(message.to_id, msgs)
-                        del_msgs.clear()
+            # All or Me
+            if del_arg == "all" or del_arg == "me":
+                msgs = await self.del_no_reply_arg(message, del_arg)
             # Number
             else:
                 try:
                     del_number = int(del_arg)
                     if del_number > 0 and del_number <= 1000:
                         del_number = del_number + 1
-                        msgs = message.client.iter_messages(entity=message.to_id,
-                                                            limit=del_number)
-                        async for msg in msgs:
-                            del_msgs.append(msg.id)
-                            if len(del_msgs) >= 99:
-                                await message.client.delete_messages(message.to_id, msgs)
-                                del_msgs.clear()
+                        msgs = await self.del_no_reply_number(message, del_number)
                     else:
                         await utils.answer(message, self.strings["del_arg_number"])
                         return
@@ -107,24 +85,41 @@ class CleanerMod(loader.Module):
         # Reply
         else:
             if message.is_reply:
-                # One
-                if del_arg == "one":
-                    msg = await message.get_reply_message()
-                    del_msgs.append(msg.id)
-                    del_msgs.append(message.id)
-                # No arg
-                else:
-                    msgs = message.client.iter_messages(entity=message.to_id, 
-                                                        min_id=message.reply_to_msg_id - 1,
-                                                        reverse=True)
-                    async for msg in msgs:
-                        del_msgs.append(msg.id)
-                        if len(del_msgs) >= 99:
-                            await message.client.delete_messages(message.to_id, msgs)
-                            del_msgs.clear()
+                # One or No Arg
+                msgs = await self.del_reply(message, del_arg)
             else:
-                await message.edit(self.strings["what"])
+                await message.edit(self.strings["del_what"])
                 return
         # Delete
-        if del_msgs:
+        if msgs: 
+            async for msg in msgs:
+                del_msgs.append(msg.id)
+                if len(del_msgs) >= 99:
+                    await message.client.delete_messages(message.to_id, msgs)
+                    del_msgs.clear()
+            if del_msgs:
             await message.client.delete_messages(message.to_id, del_msgs)
+
+    async def del_no_reply_arg(self, message, arg):
+        user_id =  None
+        if arg == "me":
+            user_id = self._me.user_id
+        msgs = message.client.iter_messages(entity=message.to_id,
+                                            from_user=user_id,
+                                            reverse=True)
+        return msgs
+    
+    async def del_no_reply_number(self, message, number):
+        msgs = message.client.iter_messages(entity=message.to_id,
+                                            limit=number)
+        return msgs
+
+    async def del_reply(self, message, arg):
+        msgs = []
+        if arg and arg == "one":
+            msgs.insert(message, message.get_reply_message)
+        else:
+            msgs = message.client.iter_messages(entity=message.to_id,
+                                                min_id=message.reply_to_msg_id - 1,
+                                                reverse=True)
+        return msgs

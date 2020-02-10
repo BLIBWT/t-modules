@@ -34,7 +34,7 @@ class TypewriterMod(loader.Module):
     """
     Typewriter:
     -> Slowly write your message.
-    
+
     Command :
      
     """

@@ -19,7 +19,6 @@ from .. import loader, utils
 
 import logging
 
-from telethon import functions, types
 from telethon.tl.types import PeerUser, PeerChat, PeerChannel, ChannelParticipantsAdmins
 logger = logging.getLogger(__name__)
 

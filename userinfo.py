@@ -31,13 +31,13 @@ class UserInfoMod(loader.Module):
     """
     User Info :
     -> Get information about users.
-    
+
     Commands :
      
     """
     strings = {"name": "User Info",
                "user_error": "<b>Couldn't find this user.</b>",
-               "user_info_arg" : "<b>You must use this command in reply or specify a user !</b>",
+               "user_info_arg": "<b>You must use this command in reply or specify a user !</b>",
                "user_info_bio": "\n• <b>Bio :</b> <code>{}</code>.",
                "user_info_bot": "\n\n• <b>Bot :</b> <code>{}</code>.",
                "user_info_deleted": "\n• <b>Deleted :</b> <code>{}</code>.",
