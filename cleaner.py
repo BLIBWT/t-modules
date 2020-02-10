@@ -29,9 +29,7 @@ def register(cb):
 @loader.tds
 class CleanerMod(loader.Module):
     """
-    Cleaner :
-    -> Delete messages in channels, group chats and private chats.
-
+    -> Delete messages in channels, group chats and private chats.\n
     Commands :
      
     """

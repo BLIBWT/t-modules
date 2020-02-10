@@ -37,9 +37,7 @@ def register(cb):
 
 class LydiaMod(loader.Module):
     """
-    Lydia :
-    -> Talk to an AI instead of a human.
-
+    -> Talk to an AI instead of a human.\n
     Commands :
      
     """

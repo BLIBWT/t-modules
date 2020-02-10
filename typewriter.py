@@ -32,9 +32,7 @@ def register(cb):
 @loader.tds
 class TypewriterMod(loader.Module):
     """
-    Typewriter:
-    -> Slowly write your message.
-
+    -> Slowly write your message.\n
     Command :
      
     """

@@ -29,9 +29,7 @@ def register(cb):
 
 class UserInfoMod(loader.Module):
     """
-    User Info :
-    -> Get information about users.
-
+    -> Get information about users.\n
     Commands :
      
     """

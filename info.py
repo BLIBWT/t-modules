@@ -35,9 +35,7 @@ def register(cb):
 @loader.tds
 class InfoMod(loader.Module):
     """
-    Info :
-    -> Provides system information about the system hosting this bot.
-
+    -> Provides system information about the system hosting this bot.\n
     Command :
      
     """

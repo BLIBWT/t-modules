@@ -30,11 +30,9 @@ def register(cb):
 @loader.tds
 class TagMod(loader.Module):
     """
-    Tag :
     -> Tag all admins (fast way to report).
     -> Tag all bots (why not ?).
-    -> Tag all members (why not ?).
-
+    -> Tag all members (why not ?).\n
     Commands :
      
     """
