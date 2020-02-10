@@ -31,7 +31,8 @@ def register(cb):
 class CleanerMod(loader.Module):
     """
     Cleaner :
-    -> Delete messages in channels, group chats and private chats.\n
+    -> Delete messages in channels, group chats and private chats.
+
     Commands :
      
     """

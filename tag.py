@@ -34,7 +34,8 @@ class TagMod(loader.Module):
     Tag :
     -> Tag all admins (fast way to report).
     -> Tag all bots (why not ?).
-    -> Tag all members (why not ?).\n
+    -> Tag all members (why not ?).
+    
     Commands :
      
     """

@@ -34,25 +34,31 @@ def register(cb):
 
 @loader.tds
 class InfoMod(loader.Module):
-    """Provides system information about the computer hosting this bot"""
+    """
+    Info :
+    -> Provides system information about the system hosting this bot.
+
+    Command :
+     
+    """
     strings = {"name": "System Info",
+               "android_patch": "<b>Android Security Patch:</b> <code>{}</code>.",
+               "android_sdk": "<b>Android SDK:</b> <code>{}</code>.",
+               "android_ver": "<b>Android Version:</b> <code>{}</code>.",
+               "arch": "<b>Arch:</b> <code>{}</code>.",
+               "distro": "<b>Linux Distribution:</b> <code>{}</code>.",
                "info_title": "<b>System Info</b>",
-               "kernel": "<b>Kernel:</b> <code>{}</code>",
-               "arch": "<b>Arch:</b> <code>{}</code>",
-               "os": "<b>OS:</b> <code>{}</code>",
-               "distro": "<b>Linux Distribution:</b> <code>{}</code>",
-               "android_sdk": "<b>Android SDK:</b> <code>{}</code>",
-               "android_ver": "<b>Android Version:</b> <code>{}</code>",
-               "android_patch": "<b>Android Security Patch:</b> <code>{}</code>",
-               "unknown_distro": "<b>Could not determine Linux distribution.</b>",
-               "python_version": "<b>Python version:</b> <code>{}</code>",
-               "telethon_version": "<b>Telethon version:</b> <code>{}</code>"}
+               "kernel": "<b>Kernel:</b> <code>{}</code>.",
+               "os": "<b>OS:</b> <code>{}</code>.",
+               "python_version": "<b>Python version:</b> <code>{}</code>.",
+               "telethon_version": "<b>Telethon version:</b> <code>{}</code>.",
+               "unknown_distro": "<b>Could not determine Linux distribution.</b>"}
 
     def __init__(self):
         self.name = self.strings["name"]
 
     async def infocmd(self, message):
-        """Shows system information"""
+        """Shows system information."""
         reply = self.strings["info_title"]
         reply += "\n" + self.strings["kernel"].format(utils.escape_html(platform.release()))
         reply += "\n" + self.strings["arch"].format(utils.escape_html(platform.architecture()[0]))
