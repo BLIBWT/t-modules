@@ -26,14 +26,14 @@ logger = logging.getLogger(__name__)
 
 
 def register(cb):
-    cb(TyperMod())
+    cb(TypewriterMod())
 
 
 @loader.tds
-class TyperMod(loader.Module):
+class TypewriterMod(loader.Module):
     """
     Typewriter:
-    -> Makes your messages type slower.
+    -> Slowly write your message.
     
     Command :
      

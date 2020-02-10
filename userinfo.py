@@ -47,8 +47,8 @@ class UserInfoMod(loader.Module):
                "user_info_picture_id": "\n• <b>Picture ID :</b> <code>{}</code>.",
                "user_info_restricted": "\n• <b>Restricted :</b> <code>{}</code>.",
                "user_info_verified": "\n• <b>Verified :</b> <code>{}</code>.",
-               "user_link_id": "<a href='tg://user?id={uid}'>{uid}</a>",
-               "user_link_id_custom": "<a href='tg://user?id={uid}'>{arg}</a>",
+               "user_link_id": "<a href='tg://user?id={id}'>{id}</a>",
+               "user_link_id_custom": "<a href='tg://user?id={id}'>{arg}</a>",
                "user_link_arg": "<b>You must specify a user !</b>",
                "user_link_searching": "<b>Searching user...</b>"}
 
@@ -115,9 +115,9 @@ class UserInfoMod(loader.Module):
                 await utils.answer(message, self.strings["user_error"])
                 return
         if len(args) > 1:
-            await utils.answer(message, self.strings["user_link_id_custom"].format(uid=user.id, arg=args[1]))
+            await utils.answer(message, self.strings["user_link_id_custom"].format(id=user.id, arg=args[1]))
         else:
-            await utils.answer(message, self.strings["user_link_id"].format(uid=user.id))
+            await utils.answer(message, self.strings["user_link_id"].format(id=user.id))
 
     async def client_ready(self, client, db):
         self.client = client

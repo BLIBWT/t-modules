@@ -1,5 +1,5 @@
 cleaner
 info
 tag
-typer
+typewriter
 userinfo

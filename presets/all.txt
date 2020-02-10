@@ -2,5 +2,5 @@ cleaner
 info
 lydia
 tag
-typer
+typewriter
 userinfo

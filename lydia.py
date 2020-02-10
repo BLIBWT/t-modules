@@ -36,12 +36,31 @@ def register(cb):
 
 
 class LydiaMod(loader.Module):
-    """Talks to a robot instead of a human"""
+    """
+    Lydia :
+    -> Talk to an AI instead of a human.
+
+    Commands :
+     
+    """
+    strings = {"name": "Lydia",
+               "chat_error": ("<b>The AI service can't be enabled or disabled in this chat.</b>\n\n"
+                              "<b>Is this a group chat ?</b>"),
+               "client_key_cfg_doc": "The API key for lydia, acquire from @IntellivoidDev",
+               "ignore_no_common_cfg_doc": "Boolean to ignore users who have no chats in common with you",
+               "lydia_enabled": "<b>AI enabled for this user.</b>",
+               "lydia_enabled_force": "<b>AI enabled for this user in this chat only.</b>",
+               "lydia_enable_error": ("<b>The AI service can't be enabled for this user.</b>\n\n"
+                                      "<b>Perhaps it wasn't disabled ?</b>"),
+               "lydia_disabled": "<b>AI disabled for this user.</b>",
+               "lydia_db_cleaned__disabled_ids": "<b>Successfully cleaned up lydia-disabled IDs.</b>",
+               "lydia_db_cleaned_id_sessions": "<b>Successfully cleaned up lydia sessions.</b>",
+               "user_error": "<b>Can't find this user.</b>"}
+
     def __init__(self):
-        self.config = loader.ModuleConfig("CLIENT_KEY", "", _("The API key for lydia, acquire from @IntellivoidDev"),
-                                          "IGNORE_NO_COMMON", False, _("Boolean to ignore users who have no chats "
-                                                                       + "in common with you"))
-        self.name = _("Lydia anti-PM")
+        self.config = loader.ModuleConfig("CLIENT_KEY", "",  self.strings["client_key_cfg_doc"],
+                                          "IGNORE_NO_COMMON", False, self.strings["ignore_no_common_cfg_doc"])
+        self.name = self.strings["name"]
         self._ratelimit = []
         self._cleanup = None
 
@@ -53,7 +72,7 @@ class LydiaMod(loader.Module):
         self._cleanup = asyncio.ensure_future(self.schedule_cleanups())
 
     async def schedule_cleanups(self):
-        """Cleans up dead sessions and reschedules itself to run when the next session expiry takes place"""
+        """Clean up dead sessions and reschedules itself to run when the next session expiry takes place."""
         sessions = self._db.get(__name__, "sessions", {})
         if len(sessions) == 0:
             return
@@ -82,46 +101,43 @@ class LydiaMod(loader.Module):
         await self.schedule_cleanups()
 
     async def enlydiacmd(self, message):
-        """Enables Lydia for target user"""
+        """Enable Lydia for target user.\n """
         old = self._db.get(__name__, "allow", [])
         if message.is_reply:
             user = (await message.get_reply_message()).from_id
         else:
             user = getattr(message.to_id, "user_id", None)
         if user is None:
-            await utils.answer(message, _("<code>The AI service cannot be enabled or disabled in this chat. "
-                                          + "Is this a group chat?</code>"))
+            await utils.answer(message, self.strings["chat_error"])
             return
         try:
             old.remove(user)
             self._db.set(__name__, "allow", old)
         except ValueError:
-            await utils.answer(message, _("<code>The AI service cannot be enabled for this user."
-                                          + "Perhaps it wasn't disabled?</code>"))
+            await utils.answer(message, self.strings["lydia_enable_error"])
             return
-        await utils.answer(message, _("<code>AI enabled for this user. </code>"))
+        await utils.answer(message, self.strings["lydia_enabled"])
 
     async def forcelydiacmd(self, message):
-        """Enables Lydia for user in specific chat"""
+        """Enable Lydia for user in specific chat.\n """
         if message.is_reply:
             user = (await message.get_reply_message()).from_id
         else:
             user = getattr(message.to_id, "user_id", None)
         if user is None:
-            await utils.answer(message, _("<code>Cannot find that user.</code>"))
+            await utils.answer(message, self.strings["user_error"])
             return
         self._db.set(__name__, "force", self._db.get(__name__, "force", []) + [[utils.get_chat_id(message), user]])
-        await utils.answer(message, _("<code>AI enabled for that user in this chat.</code>"))
+        await utils.answer(message, self.strings["lydia_enabled_force"])
 
     async def dislydiacmd(self, message):
-        """Disables Lydia for the target user"""
+        """Disable Lydia for the target user."""
         if message.is_reply:
             user = (await message.get_reply_message()).from_id
         else:
             user = getattr(message.to_id, "user_id", None)
         if user is None:
-            await utils.answer(message, _("<code>The AI service cannot be enabled or disabled in this chat. "
-                                          + "Is this a group chat?</code>"))
+            await utils.answer(message, self.strings["chat_error"])
             return
 
         old = self._db.get(__name__, "force")
@@ -131,24 +147,24 @@ class LydiaMod(loader.Module):
         except (ValueError, TypeError, AttributeError):
             pass
         self._db.set(__name__, "allow", self._db.get(__name__, "allow", []) + [user])
-        await message.edit(_("<code>AI disabled for this user.</code>"))
+        await utils.answer(message, self.strings["lydia_disabled"])
 
     async def cleanlydiadisabledcmd(self, message):
-        """ Remove all lydia-disabled users from DB. """
+        """Remove all lydia-disabled users from DB.\n """
         self._db.set(__name__, "allow", [])
-        return await utils.answer(message, _("<code>Successfully cleaned up lydia-disabled IDs</code>"))
+        return await utils.answer(message, self.strings["lydia_db_cleaned__disabled_ids"])
 
     async def cleanlydiasessionscmd(self, message):
-        """Remove all active and not active lydia sessions from DB"""
+        """Remove all active and not active lydia sessions from DB.\n """
         self._db.set(__name__, "sessions", {})
-        return await utils.answer(message, _("<code>Successfully cleaned up lydia sessions.</code>"))
+        return await utils.answer(message, self.strings["lydia_db_cleaned_sessions"])
 
     async def watcher(self, message):
         if self.config["CLIENT_KEY"] == "":
             logger.debug("no key set for lydia, returning")
             return
         if (isinstance(message.to_id, types.PeerUser) and not self.get_allowed(message.from_id)) or \
-                (self.is_forced(utils.get_chat_id(message), message.from_id)
+                (self.is_forced(utils.get_chat_id(message), message.from_id) \
                  and not isinstance(message.to_id, types.PeerUser)):
             user = await utils.get_user(message)
             if user.is_self or user.bot or user.verified:
