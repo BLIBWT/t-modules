@@ -87,8 +87,8 @@ class CleanerMod(loader.Module):
         else:
             if message.is_reply:
                 if del_arg and del_arg == "one":
-                    del_msgs.append = message.id
-                    del_msgs.append = message.reply_to_msg_id
+                    del_msgs.append(message.id)
+                    del_msgs.append(message.reply_to_msg_id)
                     await message.client.delete_messages(message.to_id, del_msgs)
                     return
                 msgs = await self.del_reply(message)
