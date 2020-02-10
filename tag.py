@@ -73,7 +73,7 @@ class TagMod(loader.Module):
                         user_name = user.first_name
                         if user.last_name is not None:
                             user_name += " " + user.last_name
-                        rep += self.strings["user_link"].format(id=user.id, name=utils.escape_html(ascii(user_name)))
+                        rep += self.strings["user_link"].format(id=user.id, name=user_name)
                         count += 1
             if count == 0:
                 rep += self.strings["no_admin"]
@@ -105,9 +105,9 @@ class TagMod(loader.Module):
                             user_name += " " + user.last_name
                         if first is True:
                             first = False
-                            rep += self.strings["user_list_link_first"].format(id=user.id, name=utils.escape_html(ascii(user_name)))
+                            rep += self.strings["user_list_link_first"].format(id=user.id, name=user_name)
                         else:
-                            rep += self.strings["user_list_link"].format(id=user.id, name=utils.escape_html(ascii(user_name)))
+                            rep += self.strings["user_list_link"].format(id=user.id, name=user_name)
                         count += 1
             if count == 0:
                 rep += self.strings["no_admin"]
@@ -134,7 +134,7 @@ class TagMod(loader.Module):
                     user_name = user.first_name
                     if user.last_name is not None:
                         user_name += " " + user.last_name
-                    rep += self.strings["user_link"].format(id=user.id, name=utils.escape_html(ascii(user_name)))
+                    rep += self.strings["user_link"].format(id=user.id, name=user_name)
             else:
                 rep += self.strings["no_member"]
             await utils.answer(message, rep)
@@ -162,7 +162,7 @@ class TagMod(loader.Module):
                         user_name = user.first_name
                         if user.last_name is not None:
                             user_name += " " + user.last_name
-                        rep += self.strings["user_link"].format(id=user.id, name=utils.escape_html(ascii(user_name)))
+                        rep += self.strings["user_link"].format(id=user.id, name=user_name)
                         count += 1
             if count == 0:
                 rep += self.strings["no_bot"]
