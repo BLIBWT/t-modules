@@ -38,7 +38,8 @@ class CleanerMod(loader.Module):
     strings = {"name": "Cleaner",
                "del_arg": "Argument must be 'all', 'me', 'one' or a number between 1 and 1000 !",
                "del_arg_number": "Number must be between 1 and 1000 !",
-               "del_what": "<i>What I will delete here ?</i>"}
+               "del_what": "<i>What I will delete here ?</i>",
+               "unknow": "An unknow problem as occured."}
 
     def __init__(self):
         self._me = None
@@ -88,17 +89,19 @@ class CleanerMod(loader.Module):
                 # One or No Arg
                 msgs = await self.del_reply(message, del_arg)
             else:
-                await message.edit(self.strings["del_what"])
+                await utils.answer(message, self.strings["del_what"])
                 return
         # Delete
-        if msgs: 
+        if msgs:
             async for msg in msgs:
                 del_msgs.append(msg.id)
                 if len(del_msgs) >= 99:
                     await message.client.delete_messages(message.to_id, msgs)
                     del_msgs.clear()
             if del_msgs:
-            await message.client.delete_messages(message.to_id, del_msgs)
+                await message.client.delete_messages(message.to_id, del_msgs)
+        else:
+            await utils.answer(message, self.strings["unknow"])
 
     async def del_no_reply_arg(self, message, arg):
         user_id =  None
@@ -117,7 +120,8 @@ class CleanerMod(loader.Module):
     async def del_reply(self, message, arg):
         msgs = []
         if arg and arg == "one":
-            msgs.insert(message, message.get_reply_message)
+            message_replied = message.get_reply_message()
+            msgs.insert(message, message_replied)
         else:
             msgs = message.client.iter_messages(entity=message.to_id,
                                                 min_id=message.reply_to_msg_id - 1,
