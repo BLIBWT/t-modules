@@ -47,7 +47,7 @@ class TagMod(loader.Module):
                "no_member": "\n<b>No member here !</b>",
                "user_link": "\n• <a href='tg://user?id={id}'>{name}</a>",
                "user_list_link": ", <a href='tg://user?id={id}'>{name}</a>",
-               "user_list_link_first": "<a href='tg://user?id={id}'>{name}</a>"}
+               "user_list_link_first": "\n<a href='tg://user?id={id}'>{name}</a>"}
 
     def config_complete(self):
         self.name = self.strings["name"]
