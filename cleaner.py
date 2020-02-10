@@ -86,8 +86,12 @@ class CleanerMod(loader.Module):
         # Reply
         else:
             if message.is_reply:
-                # One or No Arg
-                msgs = await self.del_reply(message, del_arg)
+                if del_arg and del_arg == "one":
+                    del_msgs.append = message.id
+                    del_msgs.append = message.reply_to_msg_id
+                    await message.client.delete_messages(message.to_id, del_msgs)
+                    return
+                msgs = await self.del_reply(message)
             else:
                 await utils.answer(message, self.strings["del_what"])
                 return
@@ -117,14 +121,8 @@ class CleanerMod(loader.Module):
                                             limit=number)
         return msgs
 
-    async def del_reply(self, message, arg):
-        msgs = []
-        if arg and arg == "one":
-            message_replied = message.get_reply_message()
-            msgs.append(message)
-            msgs.append(message_replied)
-        else:
-            msgs = message.client.iter_messages(entity=message.to_id,
-                                                min_id=message.reply_to_msg_id - 1,
-                                                reverse=True)
+    async def del_reply(self, message):
+        msgs = message.client.iter_messages(entity=message.to_id,
+                                            min_id=message.reply_to_msg_id - 1,
+                                            reverse=True)
         return msgs
