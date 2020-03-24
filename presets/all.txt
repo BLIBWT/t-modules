@@ -1,6 +1,5 @@
 cleaner
 info
-lydia
 tag
 typewriter
 userinfo
