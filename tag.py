@@ -74,7 +74,8 @@ class TagMod(loader.Module):
                         count += 1
             if count == 0:
                 rep += self.strings["no_admin"]
-            await utils.answer(message, rep)
+            await message.client.send_message(message.chat_id, rep)
+            await message.delete()
         else:
             await utils.answer(message, self.strings["unknow"])
 
@@ -108,7 +109,8 @@ class TagMod(loader.Module):
                         count += 1
             if count == 0:
                 rep += self.strings["no_admin"]
-            await utils.answer(message, rep)
+            await message.client.send_message(message.chat_id, rep)
+            await message.delete()
         else:
             await utils.answer(message, self.strings["unknow"])
 
@@ -134,7 +136,8 @@ class TagMod(loader.Module):
                     rep += self.strings["user_link"].format(id=user.id, name=user_name)
             else:
                 rep += self.strings["no_member"]
-            await utils.answer(message, rep)
+            await message.client.send_message(message.chat_id, rep)
+            await message.delete()
         else:
             await utils.answer(message, self.strings["unknow"])
 
@@ -163,6 +166,7 @@ class TagMod(loader.Module):
                         count += 1
             if count == 0:
                 rep += self.strings["no_bot"]
-            await utils.answer(message, rep)
+            await message.client.send_message(message.chat_id, rep)
+            await message.delete()
         else:
             await utils.answer(message, self.strings["unknow"])
