@@ -98,7 +98,7 @@ class CleanerMod(loader.Module):
             async for msg in msgs:
                 del_msgs.append(msg.id)
                 if len(del_msgs) >= 99:
-                    await message.client.delete_messages(message.to_id, msgs)
+                    await message.client.delete_messages(message.to_id, del_msgs)
                     del_msgs.clear()
             if del_msgs:
                 await message.client.delete_messages(message.to_id, del_msgs)
