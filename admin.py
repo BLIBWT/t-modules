@@ -126,6 +126,8 @@ class AdminMod(loader.Module):
             await utils.answer(message, self.strings["user_error"])
             return
         await self.client.edit_permissions(message.to_id, user.id, view_messages=False)
+        del_msgs = []
+        msgs = []
         msgs = message.client.iter_messages(entity=message.to_id,
                                             from_user=user.id,
                                             reverse=True)
