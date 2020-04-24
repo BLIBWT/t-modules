@@ -1,4 +1,4 @@
-admin
+ban
 cleaner
 info
 tag

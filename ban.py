@@ -23,23 +23,24 @@ logger = logging.getLogger(__name__)
 
 
 def register(cb):
-    cb(AdminMod())
+    cb(BanMod())
 
 
 @loader.tds
-class AdminMod(loader.Module):
+class BanMod(loader.Module):
     """
     -> Delete messages in channels, group chats and private chats.\n
     Commands :
      
     """
-    strings = {"name": "Administration",
+    strings = {"name": "Ban",
                "ban_user_done": "<b><a href='tg://user?id={id}'>{arg}</a></b> banned !",
                "ban_user_done_username": "<b>@{}</b> banned !",
                "ban_who": "<i>Who I will ban here ?</i>",
                "banrm_user_done": "<b><a href='tg://user?id={id}'>{arg}</a></b> banned and messages deleted !",
                "banrm_user_done_username": "<b>@{}</b> banned and messages deleted !",
                "group_error": "<b>You must use this command in supergroup !</b>",
+               "me_not_admin": "<b>You must be admin to use this command !</b>",
                "unban_user_done": "<b><a href='tg://user?id={id}'>{arg}</a></b> unbanned !",
                "unban_user_done_username": "<b>@{}</b> unbanned !",
                "unban_who": "<i>Who I will unban here ?</i>",
@@ -81,7 +82,11 @@ class AdminMod(loader.Module):
         if not isinstance(user.id, int):
             await utils.answer(message, self.strings["user_error"])
             return
-        await self.client.edit_permissions(message.to_id, user.id, view_messages=False)
+        try:
+            await self.client.edit_permissions(message.to_id, user.id, view_messages=False)
+        except ChatAdminRequiredError:
+            await utils.answer(message, self.strings["me_not_admin"])
+            return
         rep = ""
         if user.username is not None:
             rep = self.strings["ban_user_done_username"].format(utils.escape_html(user.username))
@@ -125,7 +130,11 @@ class AdminMod(loader.Module):
         if not isinstance(user.id, int):
             await utils.answer(message, self.strings["user_error"])
             return
-        await self.client.edit_permissions(message.to_id, user.id, view_messages=False)
+        try:
+            await self.client.edit_permissions(message.to_id, user.id, view_messages=False)
+        except ChatAdminRequiredError:
+            await utils.answer(message, self.strings["me_not_admin"])
+            return
         del_msgs = []
         msgs = []
         msgs = message.client.iter_messages(entity=message.to_id,
@@ -180,7 +189,11 @@ class AdminMod(loader.Module):
         if not isinstance(user.id, int):
             await utils.answer(message, self.strings["user_error"])
             return
-        await self.client.edit_permissions(message.to_id, user.id, view_messages=True)
+        try:
+            await self.client.edit_permissions(message.to_id, user.id, view_messages=True)
+        except ChatAdminRequiredError:
+            await utils.answer(message, self.strings["me_not_admin"])
+            return
         rep = ""
         if user.username is not None:
             rep = self.strings["unban_user_done_username"].format(utils.escape_html(user.username))
