@@ -120,7 +120,7 @@ class UserInfoMod(loader.Module):
         if len(args) > 1:
             await utils.answer(message, self.strings["user_link_id_custom"].format(id=user.id, arg=args[1]))
         else:
-            await utils.answer(message, self.strings["user_link_id"].format(id=user.id, arg=arg[0]))
+            await utils.answer(message, self.strings["user_link_id"].format(id=user.id, arg=args[0]))
 
     async def client_ready(self, client, db):
         self.client = client
