@@ -58,7 +58,10 @@ class UserInfoMod(loader.Module):
 
     async def userinfocmd(self, message):
         """
+        In reply :
         .userinfo : Get replied message user information.
+
+        Not in reply :
         .userinfo [user] : Get user information.
          
         """
@@ -70,7 +73,11 @@ class UserInfoMod(loader.Module):
                 await utils.answer(message, self.strings["user_info_arg"])
                 return
             try:
-                information = await self.client(GetFullUserRequest(args[0]))
+                information = int(args[0])
+            except ValueError:
+                information = args[0]
+            try:
+                information = await self.client(GetFullUserRequest(information))
             except ValueError:
                 await utils.answer(message, self.strings["user_error"])
                 return
