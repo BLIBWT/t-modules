@@ -34,11 +34,16 @@ class AdminMod(loader.Module):
      
     """
     strings = {"name": "Administration",
-               "ban_group": "<b>You must use this command in supergroup !</b>",
                "ban_user_done": "<b><a href='tg://user?id={id}'>{arg}</a></b> banned !",
                "ban_user_done_username": "<b>@{}</b> banned !",
-               "ban_user_error": "<b>Couldn't find this user.</b>",
-               "ban_who": "<i>Who I will ban here ?</i>"}
+               "ban_who": "<i>Who I will ban here ?</i>",
+               "banrm_user_done": "<b><a href='tg://user?id={id}'>{arg}</a></b> banned and messages deleted !",
+               "banrm_user_done_username": "<b>@{}</b> banned and messages deleted !",
+               "group_error": "<b>You must use this command in supergroup !</b>",
+               "unban_user_done": "<b><a href='tg://user?id={id}'>{arg}</a></b> unbanned !",
+               "unban_user_done_username": "<b>@{}</b> unbanned !",
+               "unban_who": "<i>Who I will unban here ?</i>",
+               "user_error": "<b>Couldn't find this user.</b>"}
 
     def config_complete(self):
         self.name = self.strings["name"]
@@ -56,7 +61,7 @@ class AdminMod(loader.Module):
          
         """
         if not isinstance(message.to_id, PeerChannel):
-            return await utils.answer(message, self.strings["ban_group"])
+            return await utils.answer(message, self.strings["group_error"])
         if message.is_reply:
             user = await utils.get_user(await message.get_reply_message())
         else:
@@ -69,12 +74,12 @@ class AdminMod(loader.Module):
             except ValueError:
                 user = str(args[0])
             try:
-                user = await self.client.get_entity(args[0])
+                user = await self.client.get_entity(user)
             except ValueError:
-                await utils.answer(message, self.strings["ban_user_error"])
+                await utils.answer(message, self.strings["user_error"])
                 return
         if not isinstance(user.id, int):
-            await utils.answer(message, self.strings["ban_user_error"])
+            await utils.answer(message, self.strings["user_error"])
             return
         await self.client.edit_permissions(message.to_id, user.id, view_messages=False)
         rep = ""
@@ -86,4 +91,101 @@ class AdminMod(loader.Module):
                 arg += " "
                 arg += user.last_name
             rep = self.strings["ban_user_done"].format(utils.escape_html(id=user.id, arg=arg))
+        await utils.answer(message, rep)
+
+    async def banrmcmd(self, message):
+        """
+        banrm : Ban & Remove Messages.
+
+        In reply :
+        .banrm : Ban replied message user and delete all messages from this user.
+
+        Not in reply :
+        .banrm [user] : Ban user by ID or username and delete all messages from this user.
+         
+        """
+        if not isinstance(message.to_id, PeerChannel):
+            return await utils.answer(message, self.strings["group_error"])
+        if message.is_reply:
+            user = await utils.get_user(await message.get_reply_message())
+        else:
+            args = utils.get_args(message)
+            if not args:
+                await utils.answer(message, self.strings["ban_who"])
+                return
+            try:
+                user = int(args[0])
+            except ValueError:
+                user = str(args[0])
+            try:
+                user = await self.client.get_entity(user)
+            except ValueError:
+                await utils.answer(message, self.strings["user_error"])
+                return
+        if not isinstance(user.id, int):
+            await utils.answer(message, self.strings["user_error"])
+            return
+        await self.client.edit_permissions(message.to_id, user.id, view_messages=False)
+        msgs = message.client.iter_messages(entity=message.to_id,
+                                            from_user=user.id,
+                                            reverse=True)
+        if msgs:
+            async for msg in msgs:
+                del_msgs.append(msg.id)
+                if len(del_msgs) >= 99:
+                    await message.client.delete_messages(message.to_id, del_msgs)
+                    del_msgs.clear()
+            if del_msgs:
+                await message.client.delete_messages(message.to_id, del_msgs)
+        rep = ""
+        if user.username is not None:
+            rep = self.strings["banrm_user_done_username"].format(utils.escape_html(user.username))
+        else:
+            arg = user.first_name
+            if user.last_name is not None:
+                arg += " "
+                arg += user.last_name
+            rep = self.strings["banrm_user_done"].format(utils.escape_html(id=user.id, arg=arg))
+        await utils.answer(message, rep)
+
+    async def unbancmd(self, message):
+        """
+        In reply :
+        .unban : Unban replied message user.
+
+        Not in reply :
+        .unban [user] : Unban user by ID or username.
+         
+        """
+        if not isinstance(message.to_id, PeerChannel):
+            return await utils.answer(message, self.strings["group_error"])
+        if message.is_reply:
+            user = await utils.get_user(await message.get_reply_message())
+        else:
+            args = utils.get_args(message)
+            if not args:
+                await utils.answer(message, self.strings["unban_who"])
+                return
+            try:
+                user = int(args[0])
+            except ValueError:
+                user = str(args[0])
+            try:
+                user = await self.client.get_entity(user)
+            except ValueError:
+                await utils.answer(message, self.strings["user_error"])
+                return
+        if not isinstance(user.id, int):
+            await utils.answer(message, self.strings["user_error"])
+            return
+        await self.client.edit_permissions(message.to_id, user.id, view_messages=True)
+        rep = ""
+        if user.username is not None:
+            rep = self.strings["unban_user_done_username"].format(utils.escape_html(user.username))
+        else:
+            arg = user.first_name
+            if user.last_name is not None:
+                arg += " "
+                arg += user.last_name
+            rep = self.strings["unban_user_done"].format(utils.escape_html(id=user.id, arg=arg))
         await utils.answer(message, rep)
