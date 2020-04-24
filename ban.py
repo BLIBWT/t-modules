@@ -85,7 +85,7 @@ class BanMod(loader.Module):
             return
         try:
             await self.client.edit_permissions(message.to_id, user.id, view_messages=False)
-        except ChatAdminRequiredError:
+        except errors.ChatAdminRequiredError:
             await utils.answer(message, self.strings["me_not_admin"])
             return
         rep = ""
@@ -133,7 +133,7 @@ class BanMod(loader.Module):
             return
         try:
             await self.client.edit_permissions(message.to_id, user.id, view_messages=False)
-        except ChatAdminRequiredError:
+        except errors.ChatAdminRequiredError:
             await utils.answer(message, self.strings["me_not_admin"])
             return
         del_msgs = []
@@ -192,7 +192,7 @@ class BanMod(loader.Module):
             return
         try:
             await self.client.edit_permissions(message.to_id, user.id, view_messages=True)
-        except ChatAdminRequiredError:
+        except errors.ChatAdminRequiredError:
             await utils.answer(message, self.strings["me_not_admin"])
             return
         rep = ""
