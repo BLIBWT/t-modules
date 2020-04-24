@@ -18,6 +18,7 @@
 from .. import loader, utils
 import logging
 from telethon.tl.types import PeerChannel
+from telethon import errors
 
 logger = logging.getLogger(__name__)
 
