@@ -38,10 +38,10 @@ class BanMod(loader.Module):
                "ban_user_done": "<b><a href='tg://user?id={id}'>{arg}</a></b> banned !",
                "ban_user_done_username": "<b>@{}</b> banned !",
                "ban_who": "<i>Who I will ban here ?</i>",
-               "banrm_user_done": "<b><a href='tg://user?id={id}'>{arg}</a></b> banned and messages deleted !",
-               "banrm_user_done_username": "<b>@{}</b> banned and messages deleted !",
                "group_error": "<b>You must use this command in supergroup !</b>",
                "me_not_admin": "<b>You must be admin to use this command !</b>",
+               "rban_user_done": "<b><a href='tg://user?id={id}'>{arg}</a></b> banned and messages deleted !",
+               "rban_user_done_username": "<b>@{}</b> banned and messages deleted !",
                "unban_user_done": "<b><a href='tg://user?id={id}'>{arg}</a></b> unbanned !",
                "unban_user_done_username": "<b>@{}</b> unbanned !",
                "unban_who": "<i>Who I will unban here ?</i>",
@@ -99,15 +99,13 @@ class BanMod(loader.Module):
             rep = self.strings["ban_user_done"].format(utils.escape_html(id=user.id, arg=arg))
         await utils.answer(message, rep)
 
-    async def banrmcmd(self, message):
+    async def rbancmd(self, message):
         """
-        banrm : Ban & Remove Messages.
-
         In reply :
-        .banrm : Ban replied message user and delete all messages from this user.
+        .rban : Ban replied message user and delete all messages from this user.
 
         Not in reply :
-        .banrm [user] : Ban user by ID or username and delete all messages from this user.
+        .rban [user] : Ban user by ID or username and delete all messages from this user.
          
         """
         if not isinstance(message.to_id, PeerChannel):
@@ -151,13 +149,13 @@ class BanMod(loader.Module):
                 await message.client.delete_messages(message.to_id, del_msgs)
         rep = ""
         if user.username is not None:
-            rep = self.strings["banrm_user_done_username"].format(utils.escape_html(user.username))
+            rep = self.strings["rban_user_done_username"].format(utils.escape_html(user.username))
         else:
             arg = user.first_name
             if user.last_name is not None:
                 arg += " "
                 arg += user.last_name
-            rep = self.strings["banrm_user_done"].format(utils.escape_html(id=user.id, arg=arg))
+            rep = self.strings["rban_user_done"].format(utils.escape_html(id=user.id, arg=arg))
         await utils.answer(message, rep)
 
     async def unbancmd(self, message):
