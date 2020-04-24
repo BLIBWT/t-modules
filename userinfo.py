@@ -42,7 +42,7 @@ class UserInfoMod(loader.Module):
                "user_info_first_name": "\n\n• <b>First name :</b> <code>{}</code>.",
                "user_info_id": "\n• <b>User ID :</b> <code>{}</code>.",
                "user_info_last_name": "\n• <b>Last name :</b> <code>{}</code>.",
-               "user_info_phone": "\n• <b>Phone :</b> <code>{}</code>.",
+               "user_info_phone": "\n• <b>Phone :</b> <code>+{}</code>.",
                "user_info_picture_id": "\n• <b>Picture ID :</b> <code>{}</code>.",
                "user_info_restricted": "\n• <b>Restricted :</b> <code>{}</code>.",
                "user_info_verified": "\n• <b>Verified :</b> <code>{}</code>.",
