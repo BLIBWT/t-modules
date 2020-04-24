@@ -16,8 +16,8 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from .. import loader, utils
-
 import logging
+from telethon.tl.types import PeerChannel
 
 logger = logging.getLogger(__name__)
 
