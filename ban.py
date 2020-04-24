@@ -136,16 +136,7 @@ class BanMod(loader.Module):
         except errors.ChatAdminRequiredError:
             await utils.answer(message, self.strings["me_not_admin"])
             return
-        del_msgs = []
-        async for msg in message.client.iter_messages(entity=message.to_id,
-                                        from_user=user.id,
-                                        reverse=True):
-            del_msgs.append(msg.id)
-            if len(del_msgs) >= 99:
-                await message.client.delete_messages(message.to_id, del_msgs)
-                del_msgs.clear()
-        if del_msgs:
-            await message.client.delete_messages(message.to_id, del_msgs)
+        self.del_messages(message, user)
         rep = ""
         if user.username is not None:
             rep = self.strings["banrm_user_done_username"].format(utils.escape_html(user.username))
@@ -202,3 +193,15 @@ class BanMod(loader.Module):
                 arg += user.last_name
             rep = self.strings["unban_user_done"].format(utils.escape_html(id=user.id, arg=arg))
         await utils.answer(message, rep)
+
+    async def del_messages(self, message, user)
+        del_msgs = []
+        async for msg in message.client.iter_messages(entity=message.to_id,
+                                                      from_user=user.id,
+                                                      reverse=True):
+            del_msgs.append(msg.id)
+            if len(del_msgs) >= 99:
+                await message.client.delete_messages(message.to_id, del_msgs)
+                del_msgs.clear()
+        if del_msgs:
+            await message.client.delete_messages(message.to_id, del_msgs)
