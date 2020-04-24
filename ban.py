@@ -194,7 +194,7 @@ class BanMod(loader.Module):
             rep = self.strings["unban_user_done"].format(utils.escape_html(id=user.id, arg=arg))
         await utils.answer(message, rep)
 
-    async def del_messages(self, message, user)
+    async def del_messages(self, message, user):
         del_msgs = []
         async for msg in message.client.iter_messages(entity=message.to_id,
                                                       from_user=user.id,
