@@ -44,7 +44,7 @@ class AdminMod(loader.Module):
         self.name = self.strings["name"]
 
     async def client_ready(self, client, db):
-        self._client = client
+        self.client = client
 
     async def bancmd(self, message):
         """
@@ -76,7 +76,7 @@ class AdminMod(loader.Module):
         if not isinstance(user.id, int):
             await utils.answer(message, self.strings["ban_user_error"])
             return
-        await client.edit_permissions(message.to_id, user.id, view_messages=False)
+        await self.client.edit_permissions(message.to_id, user.id, view_messages=False)
         rep = ""
         if user.username is not None:
             rep = self.strings["ban_user_done_username"].format(utils.escape_html(user.username))
