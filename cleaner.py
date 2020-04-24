@@ -16,7 +16,6 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from .. import loader, utils
-
 import logging
 
 logger = logging.getLogger(__name__)
@@ -40,14 +39,13 @@ class CleanerMod(loader.Module):
                "unknow": "An unknow problem as occured."}
 
     def __init__(self):
-        self._me = None
+        self.me = None
 
     def config_complete(self):
         self.name = self.strings["name"]
 
     async def client_ready(self, client, db):
-        self._client = client
-        self._me = await client.get_me(True)
+        self.me = await client.get_me(True)
 
     async def delcmd(self, message):
         """
@@ -108,7 +106,7 @@ class CleanerMod(loader.Module):
     async def del_no_reply_arg(self, message, arg):
         user_id = None
         if arg == "me":
-            user_id = self._me.user_id
+            user_id = self.me.user_id
         msgs = message.client.iter_messages(entity=message.to_id,
                                             from_user=user_id,
                                             reverse=True)

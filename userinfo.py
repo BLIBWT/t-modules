@@ -17,7 +17,6 @@
 
 from .. import loader, utils
 import logging
-
 from telethon.tl.functions.users import GetFullUserRequest
 
 logger = logging.getLogger(__name__)
@@ -55,6 +54,9 @@ class UserInfoMod(loader.Module):
 
     def config_complete(self):
         self.name = self.strings["name"]
+
+    async def client_ready(self, client, db):
+        self.client = client
 
     async def userinfocmd(self, message):
         """
@@ -123,6 +125,3 @@ class UserInfoMod(loader.Module):
             await utils.answer(message, self.strings["user_link_id"].format(id=user.id, arg=args[1]))
         else:
             await utils.answer(message, self.strings["user_link_id"].format(id=user.id, arg=args[0]))
-
-    async def client_ready(self, client, db):
-        self.client = client
