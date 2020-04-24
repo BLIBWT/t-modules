@@ -136,7 +136,7 @@ class BanMod(loader.Module):
         except errors.ChatAdminRequiredError:
             await utils.answer(message, self.strings["me_not_admin"])
             return
-        self.del_messages(message, user)
+        await self.del_messages(message, user)
         rep = ""
         if user.username is not None:
             rep = self.strings["banrm_user_done_username"].format(utils.escape_html(user.username))
