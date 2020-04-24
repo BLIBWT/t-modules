@@ -76,7 +76,7 @@ class UserInfoMod(loader.Module):
                 user = int(args[0])
             except ValueError:
                 user = str(args[0])
-            if isinstance(user, int)
+            if isinstance(user, int):
                 user = await self.client.get_entity(user)
                 user = user.username
             try:
