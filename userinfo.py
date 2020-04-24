@@ -42,12 +42,12 @@ class UserInfoMod(loader.Module):
                "user_info_first_name": "\n\n• <b>First name :</b> <code>{}</code>.",
                "user_info_id": "\n• <b>User ID :</b> <code>{}</code>.",
                "user_info_last_name": "\n• <b>Last name :</b> <code>{}</code>.",
+               "user_info_username": "\n• <b>Username :</b> <code>{}</code>.",
                "user_info_phone": "\n• <b>Phone :</b> <code>+{}</code>.",
                "user_info_picture_id": "\n• <b>Picture ID :</b> <code>{}</code>.",
                "user_info_restricted": "\n• <b>Restricted :</b> <code>{}</code>.",
                "user_info_verified": "\n• <b>Verified :</b> <code>{}</code>.",
                "user_link_id": "<a href='tg://user?id={id}'>{arg}</a>",
-               "user_link_id_custom": "<a href='tg://user?id={id}'>{arg}</a>",
                "user_link_arg": "<b>You must specify a user !</b>"}
 
     def __init__(self):
@@ -88,6 +88,8 @@ class UserInfoMod(loader.Module):
         reply += self.strings["user_info_first_name"].format(utils.escape_html(information.user.first_name))
         if information.user.last_name is not None:
             reply += self.strings["user_info_last_name"].format(utils.escape_html(information.user.last_name))
+        if information.user.username is not None:
+            reply += self.strings["user_info_username"].format(utils.escape_html(information.user.username))
         if information.user.phone is not None:
             reply += self.strings["user_info_phone"].format(utils.escape_html(information.user.phone))
         reply += self.strings["user_info_bio"].format(utils.escape_html(information.about))
@@ -118,7 +120,7 @@ class UserInfoMod(loader.Module):
             await utils.answer(message, self.strings["user_error"])
             return
         if len(args) > 1:
-            await utils.answer(message, self.strings["user_link_id_custom"].format(id=user.id, arg=args[1]))
+            await utils.answer(message, self.strings["user_link_id"].format(id=user.id, arg=args[1]))
         else:
             await utils.answer(message, self.strings["user_link_id"].format(id=user.id, arg=args[0]))
 
