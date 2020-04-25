@@ -40,8 +40,9 @@ class BanMod(loader.Module):
                "ban_who": "<i>Who I will ban here ?</i>",
                "banrm_user_done": "<b><a href='tg://user?id={id}'>{arg}</a></b> banned and messages deleted !",
                "banrm_user_done_username": "<b>@{}</b> banned and messages deleted !",
+               "command_error": ("<b>You must be admin of the group to use this command, "
+                                 "and you can't use it on you or admins not promoted by you !</b>"),
                "group_error": "<b>You must use this command in supergroup !</b>",
-               "me_not_admin": "<b>You must be admin to use this command !</b>",
                "unban_user_done": "<b><a href='tg://user?id={id}'>{arg}</a></b> unbanned !",
                "unban_user_done_username": "<b>@{}</b> unbanned !",
                "unban_who": "<i>Who I will unban here ?</i>",
@@ -85,8 +86,8 @@ class BanMod(loader.Module):
             return
         try:
             await self.client.edit_permissions(message.to_id, user.id, view_messages=False)
-        except errors.ChatAdminRequiredError:
-            await utils.answer(message, self.strings["me_not_admin"])
+        except (errors.ChatAdminRequiredError, errors.UserAdminInvalidError, ValueError):
+            await utils.answer(message, self.strings["command_error"])
             return
         rep = ""
         if user.username is not None:
@@ -133,8 +134,8 @@ class BanMod(loader.Module):
             return
         try:
             await self.client.edit_permissions(message.to_id, user.id, view_messages=False)
-        except errors.ChatAdminRequiredError:
-            await utils.answer(message, self.strings["me_not_admin"])
+        except (errors.ChatAdminRequiredError, errors.UserAdminInvalidError, ValueError):
+            await utils.answer(message, self.strings["command_error"])
             return
         await self.del_messages(message, user)
         rep = ""
@@ -180,8 +181,8 @@ class BanMod(loader.Module):
             return
         try:
             await self.client.edit_permissions(message.to_id, user.id, view_messages=True)
-        except errors.ChatAdminRequiredError:
-            await utils.answer(message, self.strings["me_not_admin"])
+        except (errors.ChatAdminRequiredError, errors.UserAdminInvalidError, ValueError):
+            await utils.answer(message, self.strings["command_error"])
             return
         rep = ""
         if user.username is not None:
