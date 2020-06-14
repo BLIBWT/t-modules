@@ -30,7 +30,7 @@ def register(cb):
 @loader.tds
 class BanMod(loader.Module):
     """
-    -> Delete messages in channels, group chats and private chats.\n
+    -> Ban & Unban people in group where you're admin.\n
     Commands :
      
     """
@@ -97,7 +97,7 @@ class BanMod(loader.Module):
             if user.last_name is not None:
                 arg += " "
                 arg += user.last_name
-            rep = self.strings["ban_user_done"].format(utils.escape_html(id=user.id, arg=arg))
+            rep = self.strings["ban_user_done"].format(id=user.id, arg=utils.escape_html(arg))
         await utils.answer(message, rep)
 
     async def banrmcmd(self, message):
@@ -146,7 +146,7 @@ class BanMod(loader.Module):
             if user.last_name is not None:
                 arg += " "
                 arg += user.last_name
-            rep = self.strings["banrm_user_done"].format(utils.escape_html(id=user.id, arg=arg))
+            rep = self.strings["banrm_user_done"].format(id=user.id, arg=utils.escape_html(arg))
         await utils.answer(message, rep)
 
     async def unbancmd(self, message):
@@ -192,7 +192,7 @@ class BanMod(loader.Module):
             if user.last_name is not None:
                 arg += " "
                 arg += user.last_name
-            rep = self.strings["unban_user_done"].format(utils.escape_html(id=user.id, arg=arg))
+            rep = self.strings["unban_user_done"].format(id=user.id, arg=utils.escape_html(arg))
         await utils.answer(message, rep)
 
     async def del_messages(self, message, user):
